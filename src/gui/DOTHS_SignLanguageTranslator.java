@@ -14,24 +14,22 @@ public final class DOTHS_SignLanguageTranslator implements Runnable
     /**
      * The frame for the GUI of the DOTHS Sign Language Translator.
      */
-    private MainFrame1 mainFrame;
+    private MainFrame mainFrame;
     
     @Override
     public void run()
     {
-        mainFrame = new MainFrame1();
+        mainFrame = new MainFrame();
         mainFrame.loadGUI();
     }
     
     /**
      * The main method for running the DOTHS Sign Language Translator.
-     * @param args 
+     * @param args Not used.
      */
     public static void main(String[] args)
     {
-        DOTHS_SignLanguageTranslator doths_signLanguageTranslator = new DOTHS_SignLanguageTranslator();
-        Thread thread = new Thread(doths_signLanguageTranslator);
-        
-        thread.start();
+        Thread doths_signLanguageTranslator = new Thread(new DOTHS_SignLanguageTranslator());
+        doths_signLanguageTranslator.start();
     }
 }

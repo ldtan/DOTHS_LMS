@@ -10,6 +10,7 @@ import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
@@ -17,7 +18,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
-import javax.swing.JToolBar;
 import javax.swing.SpringLayout;
 import obj.SignLanguage;
 
@@ -27,290 +27,40 @@ import obj.SignLanguage;
  */
 public final class ToolBar extends JPanel
 {
-    /**
-     * Label for the color panel.
-     */
-    private final JLabel LABEL_COLOR;
-    
-    /**
-     * Label for the coordinates panel.
-     */
-    private final JLabel LABEL_COORDINATES;
-    
-    /**
-     * Label for the finger part drop-down component.
-     */
-    private final JLabel LABEL_FINGER_PARTS;
-    
-    /**
-     * Label for the hand used drop-down component.
-     */
-    private final JLabel LABEL_HANDS;
-    
-    /**
-     * Label for the orientation drop-down component.
-     */
-    private final JLabel LABEL_HAND_ORIENTATION;
-    
-    /**
-     * Label for the hand part drop-down component.
-     */
-    private final JLabel LABEL_HAND_PARTS;
-    
-    /**
-     * Label for the joint panel.
-     */
-    private final JLabel LABEL_JOINT;
-    
-    /**
-     * Label for the output text area.
-     */
-    private final JLabel LABEL_OUTPUT;
-    
-    /**
-     * Label for the process text area.
-     */
-    private final JLabel LABEL_PROCESS;
-    
-    /**
-     * Label for the color range panel.
-     */
-    private final JLabel LABEL_COLOR_RANGE;
-    
-    /**
-     * Label for the x-coordinate text field.
-     */
-    private final JLabel LABEL_X;
-    
-    /**
-     * Label for the y-coordinate text field.
-     */
-    private final JLabel LABEL_Y;
-    
-    /**
-     * The layout for the calibration panel.
-     */
-    private final SpringLayout LAYOUT_CALIBRATION;
-    
-    /**
-     * The layout for the translation panel.
-     */
-    private final SpringLayout LAYOUT_TRANSLATOR;
-    
-    /**
-     * The panel that contains the calibration setup.
-     */
-    private final JPanel PANEL_CALIBRATION;
-    
-    /**
-     * The panel that contains the color setup.
-     */
-    private final JPanel PANEL_COLOR;
-    
-    /**
-     * The panel that contains the coordinating setup.
-     */
-    private final JPanel PANEL_COORDINATES;
-    
-    /**
-     * The panel that contains the dictionary setup.
-     */
-    private final JPanel PANEL_DICTIONARY;
-    
-    /**
-     * The panel that contains the joint selection setup.
-     */
-    private final JPanel PANEL_JOINT;
-    
-    /**
-     * The panel that contains the color range setup.
-     */
-    private final JPanel PANEL_COLOR_RANGE;
-    
-    /**
-     * The panel that shows the minimum, median and maximum color.
-     */
-    private final JPanel PANEL_COLOR_VIEW;
-    
-    /**
-     * The panel that contains the option for the output text area.
-     */
-    private final JPanel PANEL_TRANSLATE;
-    
-    /**
-     * The panel that contains the process and output information for the translation.
-     */
-    private final JPanel PANEL_TRANSLATOR;
-    
-    /**
-     * The scroll for the calibration panel.
-     */
-    private final JScrollPane SCROLL_CALIBRATION;
-    
-    /**
-     * The scroll for the dictionary panel.
-     */
-    private final JScrollPane SCROLL_DICTIONARY;
-    
-    /**
-     * The scroll for the output text area.
-     */
-    private final JScrollPane SCROLL_OUTPUT;
-    
-    /**
-     * The scroll for the process text area.
-     */
-    private final JScrollPane SCROLL_PROCESS;
-    
-    /**
-     * The scroll for the translator panel.
-     */
-    private final JScrollPane SCROLL_TRANSLATOR;
-    
-    /**
-     * The tool bar component.
-     */
-    private final JToolBar TOOL_BAR_CONTENT;
-    
-    /**
-     * The button for clearing the content in the output text area.
-     */
     protected final JButton BUTTON_CLEAR_OUTPUT;
-    
-    /**
-     * The button for clearing the content in the process text area.
-     */
     protected final JButton BUTTON_CLEAR_PROCESS;
-    
-    /**
-     * The button that shows the median color to be detected.
-     */
+    protected final JButton BUTTON_EDIT;
     protected final JButton BUTTON_MEDIAN_COLOR;
-    
-    /**
-     * The button that show the minimum color to be detected.
-     */
     protected final JButton BUTTON_LEFT_COLOR;
-    
-    /**
-     * The button that show the maximum color to be detected.
-     */
     protected final JButton BUTTON_RIGHT_COLOR;
-    
-    /**
-     * The button that enables the joint selection.
-     */
+    protected final JButton BUTTON_LEARN;
+    protected final JButton BUTTON_REMOVE;
     protected final JToggleButton BUTTON_SELECT_JOINT;
-    
-    /**
-     * The button that triggers the gesture translation.
-     */
     protected final JButton BUTTON_TRANSLATE;
-    
-    /**
-     * The combo box that contain the selection of finger parts.
-     */
     protected final JComboBox DROP_DOWN_FINGER_PARTS;
-    
-    /**
-     * The combo box that contains the selection for the hand used.
-     */
     protected final JComboBox DROP_DOWN_HANDS;
-    
-    /**
-     * The combo box that contains the selection for the orientation.
-     */
     protected final JComboBox DROP_DOWN_HAND_ORIENTATION;
-    
-    /**
-     * The combo box that contains the selection for the hand parts.
-     */
     protected final JComboBox DROP_DOWN_HAND_PARTS;
-    
-    /**
-     * Label for the alpha slider.
-     */
     protected final JLabel LABEL_ALPHA;
-    
-    /**
-     * Label for the blue slider.
-     */
     protected final JLabel LABEL_BLUE;
-    
-    /**
-     * Label for the green slider.
-     */
     protected final JLabel LABEL_GREEN;
-    
-    /**
-     * Label for the red slider.
-     */
     protected final JLabel LABEL_RED;
-    
-    /**
-     * The slider for the alpha color range.
-     */
     protected final JSlider SLIDER_ALPHA;
-    
-    /**
-     * The slider for the blue color range.
-     */
     protected final JSlider SLIDER_BLUE;
-    
-    /**
-     * The slider for the green color range.
-     */
     protected final JSlider SLIDER_GREEN;
-    
-    /**
-     * The slider for the red color range.
-     */
     protected final JSlider SLIDER_RED;
-    
-    /**
-     * The tabbed pane that contains the translator, calibration and dictionary panel.
-     */
     protected final JTabbedPane TABBED_PANE_CONTENT;
-    
-    /**
-     * The text area that displays the output text.
-     */
+    protected final JTextArea JTEXTAREA_INFORMATION;
     protected final JTextArea TEXT_AREA_OUTPUT;
-    
-    /**
-     * The input text area that displays the process text.
-     */
     protected final JTextArea TEXT_AREA_PROCESS;
-    
-    /**
-     * The text field holds the value for the alpha.
-     */
     protected final JTextField TEXT_FIELD_ALPHA;
-    
-    /**
-     * The text field holds the value for the blue.
-     */
     protected final JTextField TEXT_FIELD_BLUE;
-    
-    /**
-     * The text field holds the value for the green.
-     */
     protected final JTextField TEXT_FIELD_GREEN;
-    
-    /**
-     * The text field holds the value for the red.
-     */
     protected final JTextField TEXT_FIELD_RED;
-    
-    /**
-     * The text field that shows the x-coordinate of the specified target.
-     */
+    protected final JTextField TEXT_FIELD_SEARCH;
     protected final JTextField TEXT_FIELD_X;
-    
-    /**
-     * The text field that shows the y-coordinate of the specified target.
-     */
     protected final JTextField TEXT_FIELD_Y;
+    protected final JList JLIST_SIGN_LANGUAGES;
     
     /**
      * Setup the components for the tool bar.
@@ -324,43 +74,67 @@ public final class ToolBar extends JPanel
         final String VC = SpringLayout.VERTICAL_CENTER;
         final String HC = SpringLayout.HORIZONTAL_CENTER;
         
+        JPanel jPanel_translator = new JPanel();
+        JPanel jPanel_joint = new JPanel();
+        JPanel jPanel_coordinates = new JPanel();
+        JPanel jPanel_color = new JPanel();
+        JPanel jPanel_colorRange = new JPanel();
+        JPanel jPanel_colorView = new JPanel();
+        JPanel jPanel_calibration = new JPanel();
+        JPanel jPanel_learn = new JPanel();
+        JPanel jPanel_dictionary = new JPanel();
+        SpringLayout springLayout_translator = new SpringLayout();
+        SpringLayout springLayout_calibration = new SpringLayout();
+        SpringLayout springLayout_dictionary = new SpringLayout();
+        JLabel jLabel_process = new JLabel("Process");
+        JLabel jLabel_output = new JLabel("Output");
+        JLabel jLabel_joint = new JLabel("JOINT");
+        JLabel jLabel_coordinates = new JLabel("COORDINATES");
+        JLabel jLabel_color = new JLabel("COLOR");
+        JLabel jLabel_colorRange = new JLabel("COLOR RANGE");
+        JLabel jLabel_search = new JLabel("Search:");
+        JScrollPane jScrollPane_process = new JScrollPane(TEXT_AREA_PROCESS);
+        JScrollPane jScrollPane_output = new JScrollPane(TEXT_AREA_OUTPUT);
+        JScrollPane jScrollPane_signLanguage = new JScrollPane(JLIST_SIGN_LANGUAGES);
+        JScrollPane jScrollPane_information = new JScrollPane(JTEXTAREA_INFORMATION);
+        
         TEXT_AREA_PROCESS.setEditable(false);
         TEXT_AREA_OUTPUT.setEditable(false);
         
-        SCROLL_PROCESS.setViewportView(TEXT_AREA_PROCESS);
+        springLayout_translator.putConstraint(N, jLabel_process, 5, N, jPanel_translator);
+        springLayout_translator.putConstraint(W, jLabel_process, 5, W, jPanel_translator);
         
-        PANEL_TRANSLATE.add(BUTTON_CLEAR_OUTPUT);
+        springLayout_translator.putConstraint(N, jScrollPane_process, 5, S, jLabel_process);
+        springLayout_translator.putConstraint(W, jScrollPane_process, 5, W, jPanel_translator);
+        springLayout_translator.putConstraint(E, jScrollPane_process, -5, E, jPanel_translator);
+        springLayout_translator.putConstraint(S, jScrollPane_process, 150, N, jScrollPane_process);
         
-        LAYOUT_TRANSLATOR.putConstraint(N, LABEL_PROCESS, 5, N, PANEL_TRANSLATOR);
-        LAYOUT_TRANSLATOR.putConstraint(W, LABEL_PROCESS, 5, W, PANEL_TRANSLATOR);
+        springLayout_translator.putConstraint(N, BUTTON_CLEAR_PROCESS, 5, S, jScrollPane_process);
+        springLayout_translator.putConstraint(E, BUTTON_CLEAR_PROCESS, -5, E, jScrollPane_process);
         
-        LAYOUT_TRANSLATOR.putConstraint(N, SCROLL_PROCESS, 5, S, LABEL_PROCESS);
-        LAYOUT_TRANSLATOR.putConstraint(W, SCROLL_PROCESS, 5, W, PANEL_TRANSLATOR);
-        LAYOUT_TRANSLATOR.putConstraint(E, SCROLL_PROCESS, -5, E, PANEL_TRANSLATOR);
-        LAYOUT_TRANSLATOR.putConstraint(S, SCROLL_PROCESS, 150, N, SCROLL_PROCESS);
+        springLayout_translator.putConstraint(N, jLabel_output, 20, S, BUTTON_CLEAR_PROCESS);
+        springLayout_translator.putConstraint(W, jLabel_output, 5, W, jPanel_translator);
         
-        LAYOUT_TRANSLATOR.putConstraint(N, BUTTON_CLEAR_PROCESS, 5, S, SCROLL_PROCESS);
-        LAYOUT_TRANSLATOR.putConstraint(E, BUTTON_CLEAR_PROCESS, -5, E, SCROLL_PROCESS);
+        springLayout_translator.putConstraint(N, jScrollPane_output, 5, S, jLabel_output);
+        springLayout_translator.putConstraint(W, jScrollPane_output, 5, W, jPanel_translator);
+        springLayout_translator.putConstraint(E, jScrollPane_output, -5, E, jPanel_translator);
+        springLayout_translator.putConstraint(S, jScrollPane_output, 150, N, jScrollPane_output);
         
-        LAYOUT_TRANSLATOR.putConstraint(N, LABEL_OUTPUT, 20, S, BUTTON_CLEAR_PROCESS);
-        LAYOUT_TRANSLATOR.putConstraint(W, LABEL_OUTPUT, 5, W, PANEL_TRANSLATOR);
+        springLayout_translator.putConstraint(N, BUTTON_CLEAR_OUTPUT, 5, S, jScrollPane_output);
+        springLayout_translator.putConstraint(E, BUTTON_CLEAR_OUTPUT, -5, E, jScrollPane_output);
         
-        LAYOUT_TRANSLATOR.putConstraint(N, SCROLL_OUTPUT, 5, S, LABEL_OUTPUT);
-        LAYOUT_TRANSLATOR.putConstraint(W, SCROLL_OUTPUT, 5, W, PANEL_TRANSLATOR);
-        LAYOUT_TRANSLATOR.putConstraint(E, SCROLL_OUTPUT, -5, E, PANEL_TRANSLATOR);
-        LAYOUT_TRANSLATOR.putConstraint(S, SCROLL_OUTPUT, 150, N, SCROLL_OUTPUT);
+        springLayout_translator.putConstraint(N, BUTTON_TRANSLATE, 5, S, jScrollPane_output);
+        springLayout_translator.putConstraint(E, BUTTON_TRANSLATE, -5, W, BUTTON_CLEAR_OUTPUT);
         
-        LAYOUT_TRANSLATOR.putConstraint(N, PANEL_TRANSLATE, 5, S, SCROLL_OUTPUT);
-        LAYOUT_TRANSLATOR.putConstraint(E, PANEL_TRANSLATE, 0, E, SCROLL_OUTPUT);
-        
-        PANEL_TRANSLATOR.setLayout(LAYOUT_TRANSLATOR);
-        PANEL_TRANSLATOR.add(LABEL_PROCESS);
-        PANEL_TRANSLATOR.add(SCROLL_PROCESS);
-        PANEL_TRANSLATOR.add(BUTTON_CLEAR_PROCESS);
-        PANEL_TRANSLATOR.add(LABEL_OUTPUT);
-        PANEL_TRANSLATOR.add(SCROLL_OUTPUT);
-        PANEL_TRANSLATOR.add(PANEL_TRANSLATE);
-        PANEL_TRANSLATOR.setPreferredSize(new Dimension(230, 440));
+        jPanel_translator.setLayout(springLayout_translator);
+        jPanel_translator.add(jLabel_process);
+        jPanel_translator.add(jScrollPane_process);
+        jPanel_translator.add(BUTTON_CLEAR_PROCESS);
+        jPanel_translator.add(jLabel_output);
+        jPanel_translator.add(jScrollPane_output);
+        jPanel_translator.add(BUTTON_CLEAR_OUTPUT);
+        jPanel_translator.add(BUTTON_TRANSLATE);
+        jPanel_translator.setPreferredSize(new Dimension(230, 440));
         
         DROP_DOWN_FINGER_PARTS.setEnabled(false);
         DROP_DOWN_HANDS.setEnabled(false);
@@ -371,15 +145,15 @@ public final class ToolBar extends JPanel
         SLIDER_GREEN.setEnabled(false);
         SLIDER_RED.setEnabled(false);
         
-        PANEL_JOINT.setLayout(new GridLayout(4, 2, 5, 5));
-        PANEL_JOINT.add(LABEL_HANDS);
-        PANEL_JOINT.add(DROP_DOWN_HANDS);
-        PANEL_JOINT.add(LABEL_HAND_ORIENTATION);
-        PANEL_JOINT.add(DROP_DOWN_HAND_ORIENTATION);
-        PANEL_JOINT.add(LABEL_HAND_PARTS);
-        PANEL_JOINT.add(DROP_DOWN_HAND_PARTS);
-        PANEL_JOINT.add(LABEL_FINGER_PARTS);
-        PANEL_JOINT.add(DROP_DOWN_FINGER_PARTS);
+        jPanel_joint.setLayout(new GridLayout(4, 2, 5, 5));
+        jPanel_joint.add(new JLabel("Hand:"));
+        jPanel_joint.add(DROP_DOWN_HANDS);
+        jPanel_joint.add(new JLabel("Orientation:"));
+        jPanel_joint.add(DROP_DOWN_HAND_ORIENTATION);
+        jPanel_joint.add(new JLabel("Part:"));
+        jPanel_joint.add(DROP_DOWN_HAND_PARTS);
+        jPanel_joint.add(new JLabel("Division:"));
+        jPanel_joint.add(DROP_DOWN_FINGER_PARTS);
         
         TEXT_FIELD_X.setEditable(false);
         TEXT_FIELD_Y.setEditable(false);
@@ -388,21 +162,21 @@ public final class ToolBar extends JPanel
         TEXT_FIELD_BLUE.setEditable(false);
         TEXT_FIELD_ALPHA.setEditable(false);
         
-        PANEL_COORDINATES.setLayout(new GridLayout(2, 2, 5, 5));
-        PANEL_COORDINATES.add(LABEL_X);
-        PANEL_COORDINATES.add(TEXT_FIELD_X);
-        PANEL_COORDINATES.add(LABEL_Y);
-        PANEL_COORDINATES.add(TEXT_FIELD_Y);
+        jPanel_coordinates.setLayout(new GridLayout(2, 2, 5, 5));
+        jPanel_coordinates.add(new JLabel("X:"));
+        jPanel_coordinates.add(TEXT_FIELD_X);
+        jPanel_coordinates.add(new JLabel("Y:"));
+        jPanel_coordinates.add(TEXT_FIELD_Y);
         
-        PANEL_COLOR.setLayout(new GridLayout(4, 2, 5, 5));
-        PANEL_COLOR.add(new JLabel("Red:"));
-        PANEL_COLOR.add(TEXT_FIELD_RED);
-        PANEL_COLOR.add(new JLabel("Green:"));
-        PANEL_COLOR.add(TEXT_FIELD_GREEN);
-        PANEL_COLOR.add(new JLabel("Blue:"));
-        PANEL_COLOR.add(TEXT_FIELD_BLUE);
-        PANEL_COLOR.add(new JLabel("Alpha:"));
-        PANEL_COLOR.add(TEXT_FIELD_ALPHA);
+        jPanel_color.setLayout(new GridLayout(4, 2, 5, 5));
+        jPanel_color.add(new JLabel("Red:"));
+        jPanel_color.add(TEXT_FIELD_RED);
+        jPanel_color.add(new JLabel("Green:"));
+        jPanel_color.add(TEXT_FIELD_GREEN);
+        jPanel_color.add(new JLabel("Blue:"));
+        jPanel_color.add(TEXT_FIELD_BLUE);
+        jPanel_color.add(new JLabel("Alpha:"));
+        jPanel_color.add(TEXT_FIELD_ALPHA);
         
         SLIDER_ALPHA.setMajorTickSpacing(5);
         SLIDER_ALPHA.setMinorTickSpacing(1);
@@ -413,81 +187,111 @@ public final class ToolBar extends JPanel
         SLIDER_RED.setMajorTickSpacing(5);
         SLIDER_RED.setMinorTickSpacing(1);
         
-        PANEL_COLOR_RANGE.setLayout(new GridLayout(6, 2, 5, 5));
-        PANEL_COLOR_RANGE.add(LABEL_RED);
-        PANEL_COLOR_RANGE.add(SLIDER_RED);
-        PANEL_COLOR_RANGE.add(LABEL_GREEN);
-        PANEL_COLOR_RANGE.add(SLIDER_GREEN);
-        PANEL_COLOR_RANGE.add(LABEL_BLUE);
-        PANEL_COLOR_RANGE.add(SLIDER_BLUE);
-        PANEL_COLOR_RANGE.add(LABEL_ALPHA);
-        PANEL_COLOR_RANGE.add(SLIDER_ALPHA);
+        jPanel_colorRange.setLayout(new GridLayout(6, 2, 5, 5));
+        jPanel_colorRange.add(LABEL_RED);
+        jPanel_colorRange.add(SLIDER_RED);
+        jPanel_colorRange.add(LABEL_GREEN);
+        jPanel_colorRange.add(SLIDER_GREEN);
+        jPanel_colorRange.add(LABEL_BLUE);
+        jPanel_colorRange.add(SLIDER_BLUE);
+        jPanel_colorRange.add(LABEL_ALPHA);
+        jPanel_colorRange.add(SLIDER_ALPHA);
         
-        PANEL_COLOR_VIEW.setLayout(new GridLayout(1, 3, 20, 0));
-        PANEL_COLOR_VIEW.add(BUTTON_LEFT_COLOR);
-        PANEL_COLOR_VIEW.add(BUTTON_MEDIAN_COLOR);
-        PANEL_COLOR_VIEW.add(BUTTON_RIGHT_COLOR);
+        jPanel_colorView.setLayout(new GridLayout(1, 3, 20, 0));
+        jPanel_colorView.add(BUTTON_LEFT_COLOR);
+        jPanel_colorView.add(BUTTON_MEDIAN_COLOR);
+        jPanel_colorView.add(BUTTON_RIGHT_COLOR);
         
-        LAYOUT_CALIBRATION.putConstraint(N, LABEL_JOINT, 5, N, PANEL_CALIBRATION);
-        LAYOUT_CALIBRATION.putConstraint(W, LABEL_JOINT, 5, W, PANEL_CALIBRATION);
+        springLayout_calibration.putConstraint(N, jLabel_joint, 5, N, jPanel_calibration);
+        springLayout_calibration.putConstraint(W, jLabel_joint, 5, W, jPanel_calibration);
         
-        LAYOUT_CALIBRATION.putConstraint(N, PANEL_JOINT, 10, S, LABEL_JOINT);
-        LAYOUT_CALIBRATION.putConstraint(E, PANEL_JOINT, -5, E, PANEL_CALIBRATION);
-        LAYOUT_CALIBRATION.putConstraint(W, PANEL_JOINT, 5, W, PANEL_CALIBRATION);
+        springLayout_calibration.putConstraint(N, jPanel_joint, 10, S, jLabel_joint);
+        springLayout_calibration.putConstraint(E, jPanel_joint, -5, E, jPanel_calibration);
+        springLayout_calibration.putConstraint(W, jPanel_joint, 5, W, jPanel_calibration);
         
-        LAYOUT_CALIBRATION.putConstraint(N, BUTTON_SELECT_JOINT, 10, S, PANEL_JOINT);
-        LAYOUT_CALIBRATION.putConstraint(HC, BUTTON_SELECT_JOINT, 0, HC, PANEL_CALIBRATION);
+        springLayout_calibration.putConstraint(N, BUTTON_SELECT_JOINT, 10, S, jPanel_joint);
+        springLayout_calibration.putConstraint(HC, BUTTON_SELECT_JOINT, 0, HC, jPanel_calibration);
         
-        LAYOUT_CALIBRATION.putConstraint(N, LABEL_COORDINATES, 20, S, BUTTON_SELECT_JOINT);
-        LAYOUT_CALIBRATION.putConstraint(W, LABEL_COORDINATES, 5, W, PANEL_CALIBRATION);
+        springLayout_calibration.putConstraint(N, jLabel_coordinates, 20, S, BUTTON_SELECT_JOINT);
+        springLayout_calibration.putConstraint(W, jLabel_coordinates, 5, W, jPanel_calibration);
         
-        LAYOUT_CALIBRATION.putConstraint(N, PANEL_COORDINATES, 10, S, LABEL_COORDINATES);
-        LAYOUT_CALIBRATION.putConstraint(E, PANEL_COORDINATES, -5, E, PANEL_CALIBRATION);
-        LAYOUT_CALIBRATION.putConstraint(W, PANEL_COORDINATES, 5, W, PANEL_CALIBRATION);
+        springLayout_calibration.putConstraint(N, jPanel_coordinates, 10, S, jLabel_coordinates);
+        springLayout_calibration.putConstraint(E, jPanel_coordinates, -5, E, jPanel_calibration);
+        springLayout_calibration.putConstraint(W, jPanel_coordinates, 5, W, jPanel_calibration);
         
-        LAYOUT_CALIBRATION.putConstraint(N, LABEL_COLOR, 20, S, PANEL_COORDINATES);
-        LAYOUT_CALIBRATION.putConstraint(W, LABEL_COLOR, 5, W, PANEL_CALIBRATION);
+        springLayout_calibration.putConstraint(N, jLabel_color, 20, S, jPanel_coordinates);
+        springLayout_calibration.putConstraint(W, jLabel_color, 5, W, jPanel_calibration);
         
-        LAYOUT_CALIBRATION.putConstraint(N, PANEL_COLOR, 10, S, LABEL_COLOR);
-        LAYOUT_CALIBRATION.putConstraint(E, PANEL_COLOR, -5, E, PANEL_CALIBRATION);
-        LAYOUT_CALIBRATION.putConstraint(W, PANEL_COLOR, 5, W, PANEL_CALIBRATION);
+        springLayout_calibration.putConstraint(N, jPanel_color, 10, S, jLabel_color);
+        springLayout_calibration.putConstraint(E, jPanel_color, -5, E, jPanel_calibration);
+        springLayout_calibration.putConstraint(W, jPanel_color, 5, W, jPanel_calibration);
         
-        LAYOUT_CALIBRATION.putConstraint(N, LABEL_COLOR_RANGE, 20, S, PANEL_COLOR);
-        LAYOUT_CALIBRATION.putConstraint(W, LABEL_COLOR_RANGE, 5, W, PANEL_CALIBRATION);
+        springLayout_calibration.putConstraint(N, jLabel_colorRange, 20, S, jPanel_color);
+        springLayout_calibration.putConstraint(W, jLabel_colorRange, 5, W, jPanel_calibration);
         
-        LAYOUT_CALIBRATION.putConstraint(N, PANEL_COLOR_VIEW, 10, S, LABEL_COLOR_RANGE);
-        LAYOUT_CALIBRATION.putConstraint(S, PANEL_COLOR_VIEW, 20, N, PANEL_COLOR_VIEW);
-        LAYOUT_CALIBRATION.putConstraint(HC, PANEL_COLOR_VIEW, 0, HC, PANEL_CALIBRATION);
+        springLayout_calibration.putConstraint(N, jPanel_colorView, 10, S, jLabel_colorRange);
+        springLayout_calibration.putConstraint(S, jPanel_colorView, 20, N, jPanel_colorView);
+        springLayout_calibration.putConstraint(HC, jPanel_colorView, 0, HC, jPanel_calibration);
         
-        LAYOUT_CALIBRATION.putConstraint(N, PANEL_COLOR_RANGE, 10, S, PANEL_COLOR_VIEW);
-        LAYOUT_CALIBRATION.putConstraint(E, PANEL_COLOR_RANGE, -5, E, PANEL_CALIBRATION);
-        LAYOUT_CALIBRATION.putConstraint(W, PANEL_COLOR_RANGE, 5, W, PANEL_CALIBRATION);
+        springLayout_calibration.putConstraint(N, jPanel_colorRange, 10, S, jPanel_colorView);
+        springLayout_calibration.putConstraint(E, jPanel_colorRange, -5, E, jPanel_calibration);
+        springLayout_calibration.putConstraint(W, jPanel_colorRange, 5, W, jPanel_calibration);
         
-        PANEL_CALIBRATION.setLayout(LAYOUT_CALIBRATION);
-        PANEL_CALIBRATION.add(LABEL_JOINT);
-        PANEL_CALIBRATION.add(PANEL_JOINT);
-        PANEL_CALIBRATION.add(BUTTON_SELECT_JOINT);
-        PANEL_CALIBRATION.add(LABEL_COORDINATES);
-        PANEL_CALIBRATION.add(PANEL_COORDINATES);
-        PANEL_CALIBRATION.add(LABEL_COLOR);
-        PANEL_CALIBRATION.add(PANEL_COLOR);
-        PANEL_CALIBRATION.add(LABEL_COLOR_RANGE);
-        PANEL_CALIBRATION.add(PANEL_COLOR_VIEW);
-        PANEL_CALIBRATION.add(PANEL_COLOR_RANGE);
-        PANEL_CALIBRATION.setPreferredSize(new Dimension(230, 575));
+        jPanel_calibration.setLayout(springLayout_calibration);
+        jPanel_calibration.add(jLabel_joint);
+        jPanel_calibration.add(jPanel_joint);
+        jPanel_calibration.add(BUTTON_SELECT_JOINT);
+        jPanel_calibration.add(jLabel_coordinates);
+        jPanel_calibration.add(jPanel_coordinates);
+        jPanel_calibration.add(jLabel_color);
+        jPanel_calibration.add(jPanel_color);
+        jPanel_calibration.add(jLabel_colorRange);
+        jPanel_calibration.add(jPanel_colorView);
+        jPanel_calibration.add(jPanel_colorRange);
+        jPanel_calibration.setPreferredSize(new Dimension(230, 575));
         
-        SCROLL_TRANSLATOR.setViewportView(PANEL_TRANSLATOR);
-        SCROLL_CALIBRATION.setViewportView(PANEL_CALIBRATION);
-        SCROLL_DICTIONARY.setViewportView(PANEL_DICTIONARY);
+        jPanel_learn.setLayout(new GridLayout(1, 3, 0, 0));
+        jPanel_learn.add(BUTTON_LEARN);
+        jPanel_learn.add(BUTTON_EDIT);
+        jPanel_learn.add(BUTTON_REMOVE);
         
-        TABBED_PANE_CONTENT.addTab("Translator", SCROLL_TRANSLATOR);
-        TABBED_PANE_CONTENT.addTab("Calibration", SCROLL_CALIBRATION);
-        TABBED_PANE_CONTENT.addTab("Dictionary", SCROLL_DICTIONARY);
+        JTEXTAREA_INFORMATION.setEditable(false);
         
-        TOOL_BAR_CONTENT.add(TABBED_PANE_CONTENT);
+        springLayout_dictionary.putConstraint(N, jLabel_search, 5, N, jPanel_dictionary);
+        springLayout_dictionary.putConstraint(W, jLabel_search, 5, W, jPanel_dictionary);
+        
+        springLayout_dictionary.putConstraint(N, TEXT_FIELD_SEARCH, 5, N, jPanel_dictionary);
+        springLayout_dictionary.putConstraint(E, TEXT_FIELD_SEARCH, -5, E, jPanel_dictionary);
+        springLayout_dictionary.putConstraint(W, TEXT_FIELD_SEARCH, 5, E, jLabel_search);
+        
+        springLayout_dictionary.putConstraint(N, jScrollPane_signLanguage, 20, S, TEXT_FIELD_SEARCH);
+        springLayout_dictionary.putConstraint(E, jScrollPane_signLanguage, -5, E, jPanel_dictionary);
+        springLayout_dictionary.putConstraint(W, jScrollPane_signLanguage, 5, W, jPanel_dictionary);
+        springLayout_dictionary.putConstraint(S, jScrollPane_signLanguage, 300, N, jScrollPane_signLanguage);
+        
+        springLayout_dictionary.putConstraint(N, jScrollPane_information, 20, S, jScrollPane_signLanguage);
+        springLayout_dictionary.putConstraint(E, jScrollPane_information, -5, E, jPanel_dictionary);
+        springLayout_dictionary.putConstraint(W, jScrollPane_information, 5, W, jPanel_dictionary);
+        springLayout_dictionary.putConstraint(S, jScrollPane_information, 130, N, jScrollPane_information);
+        
+        springLayout_dictionary.putConstraint(N, jPanel_learn, 20, S, jScrollPane_information);
+        springLayout_dictionary.putConstraint(E, jPanel_learn, -5, E, jPanel_dictionary);
+        springLayout_dictionary.putConstraint(W, jPanel_learn, 5, W, jPanel_dictionary);
+        
+        jPanel_dictionary.setLayout(springLayout_dictionary);
+        jPanel_dictionary.add(jLabel_search);
+        jPanel_dictionary.add(TEXT_FIELD_SEARCH);
+        jPanel_dictionary.add(jScrollPane_signLanguage);
+        jPanel_dictionary.add(jScrollPane_information);
+        jPanel_dictionary.add(jPanel_learn);
+        jPanel_dictionary.setPreferredSize(new Dimension(230, 545));
+        
+        TABBED_PANE_CONTENT.addTab("Translator", new JScrollPane(jPanel_translator));
+        TABBED_PANE_CONTENT.addTab("Calibration", new JScrollPane(jPanel_calibration));
+        TABBED_PANE_CONTENT.addTab("Dictionary", new JScrollPane(jPanel_dictionary));
         
         setLayout(new GridLayout(1, 1));
-        add(TOOL_BAR_CONTENT);
+        add(TABBED_PANE_CONTENT);
     }
     
     /**
@@ -497,61 +301,38 @@ public final class ToolBar extends JPanel
     {
         LABEL_ALPHA = new JLabel("Alpha:");
         LABEL_BLUE = new JLabel("Blue:");
-        LABEL_COLOR = new JLabel("COLOR");
-        LABEL_COORDINATES = new JLabel("COORDINATES");
-        LABEL_FINGER_PARTS = new JLabel("Division:");
         LABEL_GREEN = new JLabel("Green:");
-        LABEL_HANDS = new JLabel("Hand:");
-        LABEL_HAND_ORIENTATION = new JLabel("Orientation:");
-        LABEL_HAND_PARTS = new JLabel("Part:");
-        LABEL_JOINT = new JLabel("JOINT");
-        LABEL_OUTPUT = new JLabel("Output");
-        LABEL_PROCESS = new JLabel("Process");
         LABEL_RED = new JLabel("Red:");
-        LABEL_COLOR_RANGE = new JLabel("COLOR RANGE");
-        LABEL_X = new JLabel("X:");
-        LABEL_Y = new JLabel("Y:");
-        LAYOUT_CALIBRATION = new SpringLayout();
-        LAYOUT_TRANSLATOR = new SpringLayout();
-        PANEL_CALIBRATION = new JPanel();
-        PANEL_COLOR = new JPanel();
-        PANEL_COORDINATES = new JPanel();
-        PANEL_DICTIONARY = new JPanel();
-        PANEL_JOINT = new JPanel();
-        PANEL_COLOR_RANGE = new JPanel();
-        PANEL_COLOR_VIEW = new JPanel();
-        PANEL_TRANSLATE = new JPanel();
-        PANEL_TRANSLATOR = new JPanel();
-        SCROLL_CALIBRATION = new JScrollPane();
-        SCROLL_DICTIONARY = new JScrollPane();
-        SCROLL_OUTPUT = new JScrollPane();
-        SCROLL_PROCESS = new JScrollPane();
-        SCROLL_TRANSLATOR = new JScrollPane();
         TABBED_PANE_CONTENT = new JTabbedPane();
         BUTTON_CLEAR_OUTPUT = new JButton("CLEAR");
         BUTTON_CLEAR_PROCESS = new JButton("CLEAR");
+        BUTTON_EDIT = new JButton("EDIT");
         BUTTON_MEDIAN_COLOR = new JButton();
+        BUTTON_LEARN = new JButton("LEARN");
         BUTTON_LEFT_COLOR = new JButton();
+        BUTTON_REMOVE = new JButton("REMOVE");
         BUTTON_RIGHT_COLOR = new JButton();
         BUTTON_SELECT_JOINT = new JToggleButton("SELECT JOINT");
         BUTTON_TRANSLATE = new JButton("TRANSLATE");
         DROP_DOWN_FINGER_PARTS = new JComboBox(SignLanguage.ARRAY_FINGER_PARTS);
-        DROP_DOWN_HANDS = new JComboBox(SignLanguage.ARRAY_HANDS);
+        DROP_DOWN_HANDS = new JComboBox(SignLanguage.ARRAY_HAND_USED);
         DROP_DOWN_HAND_ORIENTATION = new JComboBox(SignLanguage.ARRAY_HAND_ORIENTATION);
         DROP_DOWN_HAND_PARTS = new JComboBox(SignLanguage.ARRAY_HAND_PARTS);
         SLIDER_ALPHA = new JSlider(JSlider.HORIZONTAL, 0, 255, 0);
         SLIDER_BLUE = new JSlider(JSlider.HORIZONTAL, 0, 255, 0);
         SLIDER_GREEN = new JSlider(JSlider.HORIZONTAL, 0, 255, 0);
         SLIDER_RED = new JSlider(JSlider.HORIZONTAL, 0, 255, 0);
+        JTEXTAREA_INFORMATION = new JTextArea();
         TEXT_AREA_OUTPUT = new JTextArea();
         TEXT_AREA_PROCESS = new JTextArea();
         TEXT_FIELD_ALPHA = new JTextField();
         TEXT_FIELD_BLUE = new JTextField();
         TEXT_FIELD_GREEN = new JTextField();
         TEXT_FIELD_RED = new JTextField();
+        TEXT_FIELD_SEARCH = new JTextField();
         TEXT_FIELD_X = new JTextField();
         TEXT_FIELD_Y = new JTextField();
-        TOOL_BAR_CONTENT = new JToolBar();
+        JLIST_SIGN_LANGUAGES = new JList();
         
         setupComponents();
     }

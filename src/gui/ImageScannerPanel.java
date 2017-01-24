@@ -29,8 +29,7 @@ import marvin.io.MarvinImageIO;
  */
 public class ImageScannerPanel extends MarvinImagePanel
 {
-    private final Set<ColorListener> LISTENER_COLOR;
-    private boolean hasImage;
+    private final Set<ColorListener> LISTENER_COLOR;;
     private Set<Rectangle> selectedAreas;
     private boolean viewSelected;
     
@@ -44,9 +43,28 @@ public class ImageScannerPanel extends MarvinImagePanel
         return((ad + rd + gd + bd) / 4);
     }
     
+    public static boolean isAcceptedColor(Color c1, Color c2, double redLimit, double greenLimit, double blueLimit, double alphaLimit)
+    {
+        boolean rc = Math.abs(c1.getRed() - c2.getRed()) <= redLimit;
+        boolean gc = Math.abs(c1.getGreen()- c2.getGreen()) <= greenLimit;
+        boolean bc = Math.abs(c1.getBlue()- c2.getBlue()) <= blueLimit;
+        boolean ac = Math.abs(c1.getAlpha()- c2.getAlpha()) <= alphaLimit;
+        
+        return(rc && gc && bc && ac);
+    }
+    
+    private void setupComponents()
+    {
+        setBackground(Color.BLACK);
+    }
+    
     public ImageScannerPanel()
     {
-        this(null);
+        LISTENER_COLOR = new HashSet();
+        viewSelected = false;
+        selectedAreas = new HashSet();
+        
+        setupComponents();
     }
     
     public ImageScannerPanel(MarvinImage img)
@@ -57,15 +75,10 @@ public class ImageScannerPanel extends MarvinImagePanel
         
         if(img != null)
         {
-            super.setImage(img);
-            hasImage = true;
+            setImage(img);
         }
         
-        else
-        {
-            super.setImage(MarvinImageIO.loadImage("./img/no_image.png"));
-            hasImage = false;
-        }
+        setupComponents();
     }
     
     public boolean addColorListener(ColorListener l)
@@ -84,9 +97,9 @@ public class ImageScannerPanel extends MarvinImagePanel
         return(LISTENER_COLOR);
     }
     
-    private List<Rectangle> getColorRegions(Color targetColor, double redLimit, double greenLimit, double blueLimit, double alphaLimit)
+    public static List<Rectangle> getColorRegions(MarvinImage image, Color targetColor, double redLimit, double greenLimit, double blueLimit, double alphaLimit)
     {
-        MarvinImage img = getImage();
+        MarvinImage img = image;
         List<Rectangle> points = new ArrayList();
         List<Rectangle> regions = new ArrayList();
         int width = img.getWidth();
@@ -96,7 +109,7 @@ public class ImageScannerPanel extends MarvinImagePanel
         {
             for(int x = 0; x < width; x++)
             {
-                if(colorPercentageMatch(targetColor, new Color(img.getIntColor(x, y), true), redLimit, greenLimit, blueLimit, alphaLimit) > 0)
+                if(isAcceptedColor(targetColor, new Color(img.getIntColor(x, y), true), redLimit, greenLimit, blueLimit, alphaLimit))
                 {
                     points.add(new Rectangle(x - 1, y - 1, 2, 2));
                 }
@@ -212,9 +225,11 @@ public class ImageScannerPanel extends MarvinImagePanel
         return(LISTENER_COLOR.remove(l));
     }
     
-    public void scanPanel()
+    public void scanImage()
     {
-        if(!LISTENER_COLOR.isEmpty())
+        MarvinImage img = getImage();
+        
+        if(!LISTENER_COLOR.isEmpty() && img != null)
         {
             selectedAreas.clear();
 
@@ -229,7 +244,7 @@ public class ImageScannerPanel extends MarvinImagePanel
                     @Override
                     public void run()
                     {
-                        List<Rectangle> regions = getColorRegions(l.getTargetColor(), l.getRedLimit(), l.getGreenLimit(), l.getBlueLimit(), l.getAlphaLimit());
+                        List<Rectangle> regions = getColorRegions(img, l.getTargetColor(), l.getRedLimit(), l.getGreenLimit(), l.getBlueLimit(), l.getAlphaLimit());
 
                         for(Rectangle region : regions)
                         {
@@ -285,27 +300,10 @@ public class ImageScannerPanel extends MarvinImagePanel
         }
     }
     
-    public void selectRegion(Rectangle region)
+    public void selectArea(Rectangle region)
     {
-        selectedAreas.clear();
         selectedAreas.add(region);
         reload();
-    }
-    
-    @Override
-    public void setImage(MarvinImage img)
-    {
-        if(img != null)
-        {
-            super.setImage(img);
-            hasImage = true;
-        }
-        
-        else
-        {
-            super.setImage(MarvinImageIO.loadImage("./img/no_image.png"));
-            hasImage = false;
-        }
     }
     
     public void viewSelectedAreas(boolean state)

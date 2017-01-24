@@ -7,49 +7,49 @@ package obj;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.io.Serializable;
 
 /**
  *
  * @author Liel Tan
  */
-public class Joint extends Point
+public class Joint extends Point implements Serializable
 {
     public final Color COLOR;
-    public double alphaLimit;
-    public double blueLimit;
-    public double greenLimit;
-    public int id;
-    public double redLimit;
+    public int redLimit;
+    public int greenLimit;
+    public int blueLimit;
+    public int alphaLimit;
     
     public Joint()
     {
         this(Color.WHITE, new Point());
     }
     
-    public Joint(Color c)
+    public Joint(Color color)
     {
-        this(c, new Point());
+        this(color, new Point());
     }
     
-    public Joint(Color c, Point p)
+    public Joint(Color color, Point p)
     {
         alphaLimit = 0;
         blueLimit = 0;
         greenLimit = 0;
         redLimit = 0;
-        COLOR = c;
+        COLOR = color;
         
         super.setLocation(p);
     }
     
-    public Joint(Color c, int x, int y)
+    public Joint(Color color, int x, int y)
     {
-        this(c, new Point(x, y));
+        this(color, new Point(x, y));
     }
     
-    public Joint(int r, int g, int b, int x, int y)
+    public Joint(int red, int green, int blue, int x, int y)
     {
-        this(new Color(r, g, b), new Point(x, y));
+        this(new Color(red, green, blue), new Point(x, y));
     }
     
     public double percentageMatch(Joint j)
@@ -65,9 +65,23 @@ public class Joint extends Point
         return((ad + rd + gd + bd) / 4);
     }
     
+    public boolean equivalent(Joint j)
+    {
+        final Color OTHER = j.COLOR;
+        
+        return(Math.abs(COLOR.getRed() - OTHER.getRed()) <= redLimit
+            && Math.abs(COLOR.getGreen() - OTHER.getGreen()) <= greenLimit
+            && Math.abs(COLOR.getBlue() - OTHER.getBlue()) <= blueLimit
+            && Math.abs(COLOR.getAlpha() - OTHER.getAlpha()) <= alphaLimit);
+    }
+    
     @Override
     public String toString()
     {
-        return("joint=DOTHS_LMS.obj.Joint[rgb=" + COLOR.getRGB() + ",x=" + x + ",y=" + y + "]");
+        return("joint=DOTHS_LMS.obj.Joint[r=" + COLOR.getRed()
+                                      + ",g=" + COLOR.getGreen()
+                                      + ",b=" + COLOR.getBlue()
+                                      + ",x=" + x
+                                      + ",y=" + y + "]");
     }
 }

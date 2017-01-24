@@ -14,12 +14,12 @@ import java.awt.Dimension;
  */
 public interface ColorListener
 {
-    public abstract void colorDetected(ColorEvent event);
-    public abstract double getAlphaLimit();
-    public abstract double getBlueLimit();
-    public abstract double getGreenLimit();
-    public abstract Dimension getMaxArea();
-    public abstract Dimension getMinArea();
-    public abstract double getRedLimit();
     public abstract Color getTargetColor();
+    public abstract double getRedLimit();
+    public abstract double getGreenLimit();
+    public abstract double getBlueLimit();
+    public abstract double getAlphaLimit();
+    public abstract Dimension getMinArea();
+    public abstract Dimension getMaxArea();
+    public abstract void colorDetected(ColorEvent event);
 }

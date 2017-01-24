@@ -14,10 +14,10 @@ import javax.swing.JMenuBar;
  */
 public final class MenuBar extends JMenuBar
 {
-    private final JMenu MENU_ABOUT;
-    private final JMenu MENU_CALIBRATION;
-    private final JMenu MENU_CAPTURE;
-    private final JMenu MENU_MEDIA;
+    protected final JMenu MENU_ABOUT;
+    protected final JMenu MENU_CALIBRATION;
+    protected final JMenu MENU_CAPTURE;
+    protected final JMenu MENU_MEDIA;
     
     /**
      * Setup the components for the menu bar.

@@ -5,57 +5,144 @@
  */
 package obj;
 
+import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  *
  * @author Liel Tan
  */
-public class Gesture
+public class Gesture implements Serializable
 {
-    private final Map<Long, Skeleton> SKELETONS;
+    private final List<Skeleton> LIST_SKELETON;
     public double acceptanceRadius;
     
     public Gesture()
     {
-        SKELETONS = new HashMap();
+        LIST_SKELETON = new ArrayList();
         acceptanceRadius = 0;
     }
     
-    public boolean addSkeleton(long t, Skeleton s)
+    public boolean isEmpty()
     {
-        if(SKELETONS.containsKey(t))
+        return(LIST_SKELETON.isEmpty());
+    }
+    
+    public int skeletonCount()
+    {
+        return(LIST_SKELETON.size());
+    }
+    
+    public boolean addSkeleton(Skeleton skeleton)
+    {
+        if(LIST_SKELETON.contains(skeleton))
         {
             return(false);
         }
         
-        SKELETONS.put(t, s);
+        LIST_SKELETON.add(skeleton);
         return(true);
+    }
+    
+    public boolean containsSkeleton(Skeleton skeleton)
+    {
+        return(LIST_SKELETON.contains(skeleton));
+    }
+    
+    public Skeleton getSkeleton(int index)
+    {
+        return(LIST_SKELETON.get(index));
+    }
+    
+    public List<Skeleton> getSkeletons()
+    {
+        return(LIST_SKELETON);
+    }
+    
+    public boolean removeSkeleton(int index)
+    {
+        try
+        {
+            LIST_SKELETON.remove(index);
+            return(true);
+        }
+        
+        catch(IndexOutOfBoundsException ex)
+        {
+            return(false);
+        }
     }
     
     public void clear()
     {
-        SKELETONS.clear();
+        LIST_SKELETON.clear();
     }
     
-    public boolean containsTimeInterval(long t)
+    public Point getLocation()
     {
-        return(SKELETONS.containsKey(t));
+        return(getBounds().getLocation());
     }
     
-    public boolean containsSkeleton(Skeleton s)
+    public void setLocation(Point location)
     {
-        return(SKELETONS.containsValue(s));
+        if(!LIST_SKELETON.isEmpty())
+        {
+            List<Skeleton> list_skeleton = new ArrayList();
+            Point p1 = getLocation();
+            int xd = Math.abs(location.x - p1.x);
+            int yd = Math.abs(location.y - p1.y);
+            
+            for(Skeleton s : LIST_SKELETON)
+            {
+                Point p2 = s.getLocation();
+                
+                s.setLocation(new Point(Math.abs(p2.x - xd), Math.abs(p2.y - yd)));
+                list_skeleton.add(s);
+            }
+            
+            LIST_SKELETON.clear();
+            LIST_SKELETON.addAll(list_skeleton);
+        }
+    }
+    
+    public Dimension getSize()
+    {
+        return(getBounds().getSize());
+    }
+    
+    public void setSize(Dimension size)
+    {
+        if(!LIST_SKELETON.isEmpty())
+        {
+            List<Skeleton> list_skeleton = new ArrayList();
+            Dimension s1 = getSize();
+            double wr = size.width / s1.width;
+            double hr = size.height / s1.height;
+            
+            for(Skeleton s : LIST_SKELETON)
+            {
+                Dimension s2 = s.getSize();
+                double nw = s2.width * wr;
+                double nh = s2.height * hr;
+                
+                s.setSize(new Dimension((int)nw, (int)nh));
+                list_skeleton.add(s);
+            }
+            
+            LIST_SKELETON.clear();
+            LIST_SKELETON.addAll(list_skeleton);
+        }
     }
     
     public Rectangle getBounds()
     {
-        if(SKELETONS.isEmpty())
+        if(LIST_SKELETON.isEmpty())
         {
             return(new Rectangle());
         }
@@ -65,10 +152,8 @@ public class Gesture
         Integer maxX = null;
         Integer maxY = null;
         
-        for(long t : SKELETONS.keySet())
+        for(Skeleton s : LIST_SKELETON)
         {
-            Skeleton s = SKELETONS.get(t);
-            
             for(Joint j : s.getJoints())
             {
                 if(minX == null)
@@ -94,96 +179,38 @@ public class Gesture
         return(new Rectangle(minX, minY, (maxX - minX), (maxY - minY)));
     }
     
-    public Skeleton getSkeleton(long t)
+    public void setBounds(Rectangle area)
     {
-        return(SKELETONS.get(t));
-    }
-    
-    public Set<Long> getTimeIntervals()
-    {
-        return(SKELETONS.keySet());
-    }
-    
-    public boolean isEmpty()
-    {
-        return(SKELETONS.isEmpty());
-    }
-    
-    public double percentageMatch(Gesture g)
-    {
-        if(SKELETONS.isEmpty() && g.isEmpty())
+        if(!LIST_SKELETON.isEmpty())
         {
-            return(1);
+            setSize(area.getSize());
+            setLocation(area.getLocation());
         }
-        
-        if(SKELETONS.isEmpty() || g.isEmpty())
+    }
+    
+    public double percentageMatch(Gesture gesture)
+    {
+        if(LIST_SKELETON.isEmpty() || gesture.isEmpty())
         {
             return(0);
         }
         
         double percentage = 0;
-        int matchCount = 0;
         
-        g.setBounds(getBounds());
-        
-        for(long tt : getTimeIntervals())
+        for(Skeleton s1 : LIST_SKELETON)
         {
-            Skeleton ts = getSkeleton(tt);
-            Rectangle tr = ts.getBounds();
+            double s_percentageMatch = 0;
             
-            for(long st : g.getTimeIntervals())
+            for(Skeleton s2 : gesture.LIST_SKELETON)
             {
-                Skeleton ss = g.getSkeleton(st);
-                Rectangle sr = ss.getBounds();
-                double s_percentage = ts.percentageMatch(ss);
-                
-                if(new Point2D.Double(tr.getCenterX(), tr.getCenterY()).distance(new Point2D.Double(sr.getCenterX(), sr.getCenterY())) <= acceptanceRadius && s_percentage > 0)
-                {
-                    percentage += s_percentage;
-                    ++matchCount;
-                }
+                double percentageMatch = s1.percentageMatch(s2);
+                s_percentageMatch = percentageMatch > s_percentageMatch
+                                  ? percentageMatch : s_percentageMatch;
             }
+            
+            percentage += s_percentageMatch;
         }
-        
-        return(percentage / Math.max(SKELETONS.size(), g.skeletonCount()));
-    }
-    
-    public boolean removeSkeleton(long t)
-    {
-        return(SKELETONS.remove(t) != null);
-    }
-    
-    public void setBounds(Rectangle r)
-    {
-        if(!SKELETONS.isEmpty())
-        {
-            Map<Long, Skeleton> skeletons = new HashMap();
-            Rectangle sr = getBounds();
-            int xd = r.x - sr.x;
-            int yd = r.y - sr.y;
-            double wr = r.getWidth() / sr.getWidth();
-            double hr = r.getHeight() / sr.getHeight();
-
-            for(long t : getTimeIntervals())
-            {
-                Skeleton s = new Skeleton();
-
-                for(Joint j : getSkeleton(t).getJoints())
-                {
-                    j.setLocation((j.x - xd) * wr, (j.y - yd) * hr);
-                    s.addJoint(j);
-                }
-
-                skeletons.put(t, s);
-            }
-
-            SKELETONS.clear();
-            SKELETONS.putAll(skeletons);
-        }
-    }
-    
-    public int skeletonCount()
-    {
-        return(SKELETONS.size());
+        System.out.println("Percentage: " + (percentage / (double)LIST_SKELETON.size()));
+        return(percentage / (double)LIST_SKELETON.size());
     }
 }

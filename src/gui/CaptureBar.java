@@ -19,34 +19,59 @@ import javax.swing.SpringLayout;
  */
 public final class CaptureBar extends JPanel
 {
-    private final ButtonGroup BUTTON_GROUP_MODE;
-    private final SpringLayout LAYOUT_CONTENT;
-    private final GridLayout LAYOUT_MODE;
-    private final GridLayout LAYOUT_VIDEO;
-    private final JPanel PANEL_MODE;
-    private final JPanel PANEL_VIDEO;
-    protected final JToggleButton BUTTON_CALIBRATION_MODE;
-    protected final JToggleButton BUTTON_DICTIONARY_MODE;
-    protected final JButton BUTTON_FORWARD;
-    protected final JToggleButton BUTTON_PLAY;
-    protected final JToggleButton BUTTON_RECORD;
-    protected final JButton BUTTON_REWIND;
-    protected final JButton BUTTON_SAVE;
-    protected final JToggleButton BUTTON_TRANSLATOR_MODE;
+    private final JPanel JPANEL_MEDIA;
+    
+    protected final JToggleButton JTOGGLEBUTTON_PLAY;
+    protected final JButton JBUTTON_PREVIOUS;
+    protected final JButton JBUTTON_FORWARD;
+    protected final JButton JBUTTON_ADD;
+    protected final JButton JBUTTON_REMOVE;
+    protected final JButton JBUTTON_SCAN;
+    protected final JToggleButton JTOGGLEBUTTON_RECORD;
+    protected final JButton JBUTTON_SAVE;
+    
+    protected final JToggleButton JTOGGLEBUTTON_MOTION_MODE;
+    protected final JToggleButton JTOGGLEBUTTON_STATIC_MODE;
     
     /**
      * Configures the event listeners for each component.
      */
     private void configureComponents()
     {
-        BUTTON_PLAY.addActionListener((ActionEvent ae) ->
+        JTOGGLEBUTTON_PLAY.addActionListener((ActionEvent ae) ->
         {
-            BUTTON_PLAY.setText(BUTTON_PLAY.isSelected() ? "PAUSE" : "PLAY");
+            JTOGGLEBUTTON_PLAY.setText(JTOGGLEBUTTON_PLAY.isSelected() ? "PAUSE" : "PLAY");
         });
         
-        BUTTON_RECORD.addActionListener((ActionEvent ae) ->
+        JTOGGLEBUTTON_RECORD.addActionListener((ActionEvent ae) ->
         {
-            BUTTON_RECORD.setText(BUTTON_RECORD.isSelected() ? "STOP" : "RECORD");
+            JTOGGLEBUTTON_RECORD.setText(JTOGGLEBUTTON_RECORD.isSelected() ? "STOP" : "RECORD");
+        });
+        
+        JTOGGLEBUTTON_STATIC_MODE.addActionListener((ActionEvent ae) ->
+        {
+            JPANEL_MEDIA.removeAll();
+            JPANEL_MEDIA.add(JTOGGLEBUTTON_PLAY);
+            JPANEL_MEDIA.add(JBUTTON_PREVIOUS);
+            JPANEL_MEDIA.add(JBUTTON_FORWARD);
+            JPANEL_MEDIA.add(JBUTTON_ADD);
+            JPANEL_MEDIA.add(JBUTTON_REMOVE);
+            JPANEL_MEDIA.add(JBUTTON_SCAN);
+            JPANEL_MEDIA.add(JBUTTON_SAVE);
+            
+            reload();
+        });
+        
+        JTOGGLEBUTTON_MOTION_MODE.addActionListener((ActionEvent ae) ->
+        {
+            JPANEL_MEDIA.removeAll();
+            JPANEL_MEDIA.add(JTOGGLEBUTTON_PLAY);
+            JPANEL_MEDIA.add(JBUTTON_PREVIOUS);
+            JPANEL_MEDIA.add(JBUTTON_FORWARD);
+            JPANEL_MEDIA.add(JTOGGLEBUTTON_RECORD);
+            JPANEL_MEDIA.add(JBUTTON_SAVE);
+            
+            reload();
         });
     }
     
@@ -59,32 +84,36 @@ public final class CaptureBar extends JPanel
         final String E = SpringLayout.EAST;
         final String VC = SpringLayout.VERTICAL_CENTER;
         
-        PANEL_VIDEO.setLayout(LAYOUT_VIDEO);
-        PANEL_VIDEO.add(BUTTON_PLAY);
-        PANEL_VIDEO.add(BUTTON_REWIND);
-        PANEL_VIDEO.add(BUTTON_RECORD);
-        PANEL_VIDEO.add(BUTTON_FORWARD);
-        PANEL_VIDEO.add(BUTTON_SAVE);
+        JPanel jPanel_mode = new JPanel();
+        SpringLayout springLayout_content = new SpringLayout();
+        ButtonGroup buttonGroup_mode = new ButtonGroup();
         
-        BUTTON_TRANSLATOR_MODE.setSelected(true);
+        JPANEL_MEDIA.setLayout(new GridLayout(1, 5, 5, 5));
+        JPANEL_MEDIA.add(JTOGGLEBUTTON_PLAY);
+        JPANEL_MEDIA.add(JBUTTON_PREVIOUS);
+        JPANEL_MEDIA.add(JBUTTON_FORWARD);
+        JPANEL_MEDIA.add(JBUTTON_ADD);
+        JPANEL_MEDIA.add(JBUTTON_REMOVE);
+        JPANEL_MEDIA.add(JBUTTON_SCAN);
+        JPANEL_MEDIA.add(JBUTTON_SAVE);
         
-        BUTTON_GROUP_MODE.add(BUTTON_TRANSLATOR_MODE);
-        BUTTON_GROUP_MODE.add(BUTTON_CALIBRATION_MODE);
-        BUTTON_GROUP_MODE.add(BUTTON_DICTIONARY_MODE);
+        buttonGroup_mode.add(JTOGGLEBUTTON_MOTION_MODE);
+        buttonGroup_mode.add(JTOGGLEBUTTON_STATIC_MODE);
         
-        PANEL_MODE.add(BUTTON_TRANSLATOR_MODE);
-        PANEL_MODE.add(BUTTON_CALIBRATION_MODE);
-        PANEL_MODE.add(BUTTON_DICTIONARY_MODE);
-        PANEL_MODE.setLayout(LAYOUT_MODE);
+        JTOGGLEBUTTON_STATIC_MODE.setSelected(true);
         
-        LAYOUT_CONTENT.putConstraint(W, PANEL_VIDEO, 20, W, this);
-        LAYOUT_CONTENT.putConstraint(VC, PANEL_VIDEO, 0, VC, this);
-        LAYOUT_CONTENT.putConstraint(E, PANEL_MODE, -20, E, this);
-        LAYOUT_CONTENT.putConstraint(VC, PANEL_MODE, 0, VC, this);
+        jPanel_mode.setLayout(new GridLayout(1, 2, 5, 5));
+        jPanel_mode.add(JTOGGLEBUTTON_STATIC_MODE);
+        jPanel_mode.add(JTOGGLEBUTTON_MOTION_MODE);
         
-        add(PANEL_VIDEO);
-        add(PANEL_MODE);
-        setLayout(LAYOUT_CONTENT);
+        springLayout_content.putConstraint(W, JPANEL_MEDIA, 20, W, this);
+        springLayout_content.putConstraint(VC, JPANEL_MEDIA, 0, VC, this);
+        springLayout_content.putConstraint(E, jPanel_mode, -20, E, this);
+        springLayout_content.putConstraint(VC, jPanel_mode, 0, VC, this);
+        
+        add(JPANEL_MEDIA);
+        add(jPanel_mode);
+        setLayout(springLayout_content);
     }
     
     /**
@@ -92,22 +121,25 @@ public final class CaptureBar extends JPanel
      */
     public CaptureBar()
     {
-        BUTTON_CALIBRATION_MODE = new JToggleButton("CALIBRATION");
-        BUTTON_DICTIONARY_MODE = new JToggleButton("DICTIONARY");
-        BUTTON_FORWARD = new JButton("FORWARD");
-        BUTTON_PLAY = new JToggleButton("PLAY");
-        BUTTON_RECORD = new JToggleButton("RECORD");
-        BUTTON_REWIND = new JButton("REWIND");
-        BUTTON_SAVE = new JButton("SAVE");
-        BUTTON_TRANSLATOR_MODE = new JToggleButton("TRANSLATOR");
-        BUTTON_GROUP_MODE = new ButtonGroup();
-        LAYOUT_CONTENT = new SpringLayout();
-        LAYOUT_MODE = new GridLayout(1, 2, 5, 5);
-        LAYOUT_VIDEO = new GridLayout(1, 5, 5, 5);
-        PANEL_MODE = new JPanel();
-        PANEL_VIDEO = new JPanel();
+        JBUTTON_ADD = new JButton("ADD");
+        JTOGGLEBUTTON_MOTION_MODE = new JToggleButton("MOTION");
+        JTOGGLEBUTTON_STATIC_MODE = new JToggleButton("STATIC");
+        JBUTTON_FORWARD = new JButton("FORWARD");
+        JTOGGLEBUTTON_PLAY = new JToggleButton("PLAY");
+        JTOGGLEBUTTON_RECORD = new JToggleButton("RECORD");
+        JBUTTON_PREVIOUS = new JButton("PREVIOUS");
+        JBUTTON_REMOVE = new JButton("REMOVE");
+        JBUTTON_SAVE = new JButton("SAVE");
+        JBUTTON_SCAN = new JButton("SCAN");
+        JPANEL_MEDIA = new JPanel();
         
         setupComponents();
         configureComponents();
+    }
+    
+    public void reload()
+    {
+        revalidate();
+        repaint();
     }
 }

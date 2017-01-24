@@ -5,18 +5,15 @@
  */
 package gui;
 
-import event.ColorEvent;
 import event.ColorListener;
-import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.Rectangle;
+import static marvin.MarvinPluginCollection.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
-import marvin.MarvinPluginCollection;
 import marvin.image.MarvinImage;
 import marvin.io.MarvinImageIO;
 
@@ -27,51 +24,84 @@ import marvin.io.MarvinImageIO;
 public class ImageBox extends ImageScannerPanel
 {
     private final List<MarvinImage> IMAGE_LIST;
-    private final ComponentAdapter COMPONENT_LISTENER;
+    private final ImageScannerPanel IMAGE_SCANNER;
     private MarvinImage imageOut;
+    private MarvinImage imageFiller;
     private int imageIndex;
     private boolean slide;
+    private boolean hasImage;
     private long slidePause;
     public static final int NORMAL_MODE = 0;
     public static final int SLIDE_MODE = 1;
     
-    public ImageBox()
+    private void configureComponents()
     {
-        IMAGE_LIST = new ArrayList();
-        
-        COMPONENT_LISTENER = new ComponentAdapter()
+        addComponentListener(new ComponentAdapter()
         {
             @Override
             public void componentResized(ComponentEvent e)
             {
-                if(imageCount() > 0)
-                {
-                    setImage(imageIndex);
-                }
+                setImage(IMAGE_LIST.size() > 0 ? IMAGE_LIST.get(imageIndex) : null);
             }
-        };
-        
+        });
+    }
+    
+    public ImageBox()
+    {
+        IMAGE_LIST = new ArrayList();
+        IMAGE_SCANNER = new ImageScannerPanel();
+        imageFiller = MarvinImageIO.loadImage("./img/no_image.png");
+        imageOut = imageFiller;
         imageIndex = 0;
         slidePause = 1000;
         slide = false;
+        hasImage = false;
         
-        super.addComponentListener(COMPONENT_LISTENER);
+        configureComponents();
+    }
+    
+    @Override
+    public boolean addColorListener(ColorListener cl)
+    {
+        return(super.addColorListener(cl) && IMAGE_SCANNER.addColorListener(cl));
+    }
+    
+    @Override
+    public boolean removeColorListener(ColorListener cl)
+    {
+        return(super.removeColorListener(cl) && IMAGE_SCANNER.removeColorListener(cl));
     }
     
     public void addImage(MarvinImage image)
     {
         IMAGE_LIST.add(image);
         setImage(imageCount() - 1);
+        
+        hasImage = !IMAGE_LIST.isEmpty();
     }
     
-    public void clear()
+    public void clearImages()
     {
         IMAGE_LIST.clear();
+        setImage(null);
+        
+        hasImage = !IMAGE_LIST.isEmpty();
+    }
+    
+    @Override
+    public MarvinImage getImage()
+    {
+        return(hasImage && !imageOut.getFormatName().equals(imageFiller.getFormatName()) ? super.getImage() : null);
     }
     
     public int getImageIndex()
     {
         return(imageIndex);
+    }
+    
+    public MarvinImage getImageFiller()
+    {
+        return(imageFiller);
     }
     
     public MarvinImage getOriginalImage()
@@ -101,34 +131,84 @@ public class ImageBox extends ImageScannerPanel
     
     public void nextImage()
     {
-        setImage(hasNext() ? imageIndex + 1 : 0);
+        if(!IMAGE_LIST.isEmpty())
+        {
+            clearSelectedAreas();
+            setImage(hasNext() ? imageIndex + 1 : 0);
+        }
     }
     
-    public void setSlidePause(long ms)
+    @Override
+    public void scanImage()
     {
-        
+        if(hasImage)
+        {
+            super.scanImage();
+        }
+    }
+    
+    public void scanOriginalImage()
+    {
+        if(hasImage)
+        {
+            IMAGE_SCANNER.setImage(getOriginalImage());
+            IMAGE_SCANNER.scanImage();
+            clearSelectedAreas();
+            
+            for(Rectangle r : IMAGE_SCANNER.getSelectedAreas())
+            {
+                selectArea(r);
+            }
+        }
     }
     
     @Override
     public void setImage(MarvinImage image)
     {
-        IMAGE_LIST.clear();
-        addImage(image);
+        imageOut = image != null ? image.clone() : imageFiller.clone();
+        hasImage = image != null;
+        int width = getWidth();
+        int height = getHeight();
+        
+        if(width > 0 && height > 0)
+        {
+            imageOut.resize(width, height);
+            imageOut.update();
+        }
+        
+        super.setImage(imageOut);
+        clearSelectedAreas();
+        reload();
     }
     
     public void setImage(int i)
     {
-        MarvinImage imageIn = getOriginalImage();
-        imageOut = imageIn.clone();
-        imageIndex = i >= 0 && i < imageCount() ? i : 0;
-        int width = getWidth();
-        int height = getHeight();
+        if(i >= 0 && i < IMAGE_LIST.size())
+        {
+            imageIndex = i;
+            hasImage = true;
+            
+            setImage(IMAGE_LIST.get(imageIndex));
+        }
         
-        MarvinPluginCollection.scale(imageIn, imageOut, width > 0 ? width : 1, height > 0 ? height : 1);
-        imageOut.update();
-        
-        super.setImage(imageOut);
-        reload();
+        else
+        {
+            setImage(imageFiller);
+            hasImage = false;
+        }
+    }
+    
+    public void setImageFiller(MarvinImage img)
+    {
+        if(img != null)
+        {
+            imageFiller = img;
+            
+            if(IMAGE_LIST.isEmpty())
+            {
+                setImage(null);
+            }
+        }
     }
     
     public void setImageMode(int mode)
@@ -142,7 +222,7 @@ public class ImageBox extends ImageScannerPanel
                 
             case 1:
                 
-                slide = true;
+                slide = !IMAGE_LIST.isEmpty();
                 
                 new Thread()
                 {
@@ -171,11 +251,24 @@ public class ImageBox extends ImageScannerPanel
     
     public void previousImage()
     {
-        setImage(hasPrevious() ? imageIndex - 1 : imageCount() - 1);
+        if(!IMAGE_LIST.isEmpty())
+        {
+            clearSelectedAreas();
+            setImage(hasPrevious() ? imageIndex - 1 : imageCount() - 1);
+        }
+    }
+    
+    public void removeImage()
+    {
+        removeImage(imageIndex);
+        hasImage = !IMAGE_LIST.isEmpty();
     }
     
     public void removeImage(int i)
     {
         IMAGE_LIST.remove(i);
+        setImage(imageIndex >= IMAGE_LIST.size() ? --imageIndex : imageIndex);
+        
+        hasImage = !IMAGE_LIST.isEmpty();
     }
 }
